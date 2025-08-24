@@ -1,7 +1,7 @@
 [build]
-  base = "."
-  publish = "frontend/build"
-  command = "cd frontend && yarn install && yarn build"
+  base = "/"
+  publish = "Portfolio-main/frontend/build"
+  command = "cd Portfolio-main/frontend && yarn install && yarn build"
 
 [build.environment]
   NODE_VERSION = "20.11.1"
