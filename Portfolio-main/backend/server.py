@@ -46,8 +46,17 @@ except Exception as e:
     print(f"Error connecting to MongoDB: {e}")
     raise
 
-# Create the main app without a prefix
+# Create the main app
 app = FastAPI()
+
+# Add CORS middleware immediately after creating the app
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # For development; restrict in production
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Create a router with the /api prefix
 api_router = APIRouter(prefix="/api")
@@ -86,10 +95,15 @@ class StatusCheck(BaseModel):
 class StatusCheckCreate(BaseModel):
     client_name: str
 
-# Add your routes to the router instead of directly to app
+# Root endpoint
+@app.get("/")
+async def health_check():
+    return {"status": "ok", "message": "Backend is running"}
+
+# API root endpoint
 @api_router.get("/")
-async def root():
-    return {"message": "Hello World"}
+async def api_root():
+    return {"message": "API is running"}
 
 @api_router.post("/status", response_model=StatusCheck)
 async def create_status_check(input: StatusCheckCreate):
@@ -105,14 +119,6 @@ async def get_status_checks():
 
 # Include the router in the main app
 app.include_router(api_router)
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_credentials=True,
-    allow_origins=os.environ.get('CORS_ORIGINS', '*').split(','),
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
 
 # Configure logging
 logging.basicConfig(
