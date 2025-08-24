@@ -1,11 +1,13 @@
 [build]
   base = "."
   publish = "frontend/build"
-  command = "cd frontend && npm install && npm run build"
+  command = "cd frontend && yarn install && yarn build"
 
 [build.environment]
-  NODE_VERSION = "20"
-  NPM_VERSION = "10"
+  NODE_VERSION = "20.11.1"
+  NPM_VERSION = "10.2.4"
+  YARN_VERSION = "1.22.22"
+  YARN_FLAGS = "--network-timeout 600000"
 
 [[redirects]]
   from = "/*"
